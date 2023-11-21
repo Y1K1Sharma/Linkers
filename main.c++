@@ -92,31 +92,44 @@ void printSolution(float dist[], int src,int parent[],int dest,vector<int> &cnt)
 	printPath(parent, dest,src,cnt);
 }
 
-void dijkstra(float graph[][V], int src, int d,vector<int> &cnt){
+void dijkstra(float graph[][V], int src, int d, vector<int> &cnt) {
     float dist[V];
+    float time[V]; // Added for storing time
     bool sptSet[V];
     int parent[V];
-    rep0(i,V)
-    {
+
+    rep0(i, V) {
         parent[0] = -1;
-        dist[i]   = 1000.0;
+        dist[i] = 1000.0;
+        time[i] = 0.0;
         sptSet[i] = false;
     }
 
     dist[src] = 0.0;
-    for(int count = 0; count < V - 1; count++)
-	{
+    for (int count = 0; count < V - 1; count++) {
         int u = minDistance(dist, sptSet);
         sptSet[u] = true;
-        for (int v = 0; v < V; v++)
-            if (!sptSet[v] && graph[u][v] && dist[u] + graph[u][v] < dist[v])
-            {
+
+        for (int v = 0; v < V; v++) {
+            if (!sptSet[v] && graph[u][v] && dist[u] + graph[u][v] < dist[v]) {
                 parent[v] = u;
                 dist[v] = dist[u] + graph[u][v];
+                time[v] = time[u] + 2.4;  // Assuming 2.4 minutes between stations
             }
+        }
     }
-    printSolution(dist,src, parent, d,cnt);
+
+    // Print the total time taken along with distance and fare
+    cout << "Total Distance between two stations is: " << dist[d] << " km" << endl;
+    cout << "Total Time taken between two stations is: " << time[d] << " minutes" << endl;
+
+    metro_fare(dist[d]);
+
+    cout << metro_lst[metro_no[src]];
+    cnt.push_back(metro_no[src]);
+    printPath(parent, d, src, cnt);
 }
+
 
 string yellow_line[37]={"Samaypur Badli","Rohini Sector 18,19","Haiderpur Badli Mor","Jahangirpuri","Adarsh Nagar","Azadpur","Model Town","G.T.B. Nagar","Vishwavidyalaya","Vidhan Sabha","Civil Lines","Kashmere Gate","Chandni Chowk","Chawri Bazar","New Delhi","Rajiv Chowk","Patel Chowk","Central Secretariat","Udyog Bhawan","Lok Kalyan Marg","Jorbagh","INA","AIIMS","Green Park","Hauz Khas","Malviya Nagar","Saket","Qutub Minar","Chhatarpur","Sultanpur","Ghitorni","Arjan Garh","Guru Dronacharya","Sikandarpur","MG Road","IFFCO Chowk","Huda City Centre"};
 float yl[37]={0.0,0.8,1.3,1.3,1.3,1.5,1.4,1.4,0.8,1.0,1.3,1.1,1.1,1.0,0.8,1.1,1.3,0.9,0.3,1.6,1.2,1.3,0.8,1.0,1.8,1.7,0.9,1.7,1.3,1.6,1.3,1.7,1.5,1.0,1.2,1.1,1.5};
